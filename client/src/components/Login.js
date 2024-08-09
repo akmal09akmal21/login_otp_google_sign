@@ -8,7 +8,7 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  axios.defaults.withCredentials = true;
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -16,13 +16,21 @@ const Login = () => {
         email,
         password,
       });
-      console.log(data);
+
       if (data.success === true) {
         toast.success(data.message);
-        setTimeout(() => {
-          navigate("/home");
-        }, 2000);
+        // const token = data.token;
+
+        // localStorage.setItem("token", token);
+        localStorage.setItem("token", JSON.stringify(data));
+        // localStorage.setItem('userInfo', JSON.stringify(data));
+        if (typeof window !== "undefined") {
+          setTimeout(() => {
+            navigate("/home");
+          }, 2000);
+        }
       }
+      console.log(data);
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);

@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 
 const Contact = () => {
   const [use, setUsers] = useState([]);
+
+  async function demo() {
+    const res = await axios.get("http://localhost:5000/all");
+    setUsers(res.data.users);
+  }
   useEffect(() => {
-    async function demo() {
-      const res = await axios.get("http://localhost:5000/all");
-      setUsers(res.data.users);
-    }
     demo();
   }, []);
   return (

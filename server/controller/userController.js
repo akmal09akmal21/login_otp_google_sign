@@ -73,6 +73,7 @@ const loginController = async (req, res) => {
     res.status(200).send({
       success: true,
       message: "logindan otdi",
+      token,
     });
   } catch (error) {
     console.log(error);
@@ -101,7 +102,7 @@ const logout = (req, res, next) => {
 };
 const alluser = async (req, res) => {
   try {
-    const users = await (await userModel.find({})).reverse();
+    const users = await userModel.find({});
     if (!users) {
       return res.status(404).send({
         success: false,

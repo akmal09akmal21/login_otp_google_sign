@@ -182,7 +182,7 @@ function Navbar() {
     axios
       .get("http://localhost:5000/logout")
       .then((result) => {
-        // localStorage.removeItem("token");
+        localStorage.removeItem("token");
         toast.success(result.data.message);
         navigate("/login");
       })

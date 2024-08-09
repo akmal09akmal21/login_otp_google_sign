@@ -23,8 +23,8 @@ const User = require("../model/userModel");
 
 // check is user is authenticated
 const isAuthenticated = async (req, res, next) => {
-  const { token } = req.cookies;
-  console.log(token + "            " + "ssssssssss");
+  const token = req.cookies.token;
+  console.log(token);
   // Make sure token exists
   if (!token) {
     return res
