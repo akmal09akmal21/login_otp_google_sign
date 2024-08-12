@@ -1,13 +1,13 @@
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
-dotenv.config();
+
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const morgan = require("morgan");
 const dataDB = require("./db/db");
 const appRouter = require("./routes/userRouter");
-
+dotenv.config();
 // middlware
 const corsOptions = {
   origin: "http://localhost:3000",

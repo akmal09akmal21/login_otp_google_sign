@@ -178,6 +178,7 @@ function Navbar() {
   // const token = localStorage.getItem("token");
   // console.log(token);
   axios.defaults.withCredentials = true;
+
   const logOut = () => {
     axios
       .get("http://localhost:5000/logout")
@@ -231,6 +232,9 @@ function Navbar() {
               className="block md:inline-block px-3 py-2 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
             >
               Contact
+            </Link>
+            <Link className="block md:inline-block px-3 py-2 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">
+              refreshtoken
             </Link>
             <button
               type="button"

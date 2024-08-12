@@ -3,14 +3,17 @@ import { useEffect, useState } from "react";
 
 const Contact = () => {
   const [use, setUsers] = useState([]);
-
-  async function demo() {
-    const res = await axios.get("http://localhost:5000/all");
+  axios.defaults.withCredentials = true;
+  const getAll = async () => {
+    let res = await axios.get("http://localhost:5000/all", {
+      withCredentials: true,
+    });
     setUsers(res.data.users);
-  }
+  };
   useEffect(() => {
-    demo();
+    getAll();
   }, []);
+
   return (
     <>
       {use.map((elem, index) => (

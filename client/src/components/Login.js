@@ -12,22 +12,26 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post("http://localhost:5000/login", {
-        email,
-        password,
-      });
+      const { data } = await axios.post(
+        "http://localhost:5000/login",
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       if (data.success === true) {
         toast.success(data.message);
-        // const token = data.token;
 
-        // localStorage.setItem("token", token);
         localStorage.setItem("token", JSON.stringify(data));
-        // localStorage.setItem('userInfo', JSON.stringify(data));
+
         if (typeof window !== "undefined") {
           setTimeout(() => {
             navigate("/home");
-          }, 2000);
+          }, 1000);
         }
       }
       console.log(data);

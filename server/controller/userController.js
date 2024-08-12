@@ -62,18 +62,24 @@ const loginController = async (req, res) => {
       });
     }
     // sendTokenResponse(user, 200, res);
-    const token = jwt.sign(
-      { userName: user.userName },
-      process.env.JWT_SECRET,
+    const tokenData = {};
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "5d",
+    });
+    const userInfo = jwt.sign(
+      { id: user._id },
+      process.env.ACCESS_TOKEN_SECRET,
       {
-        expiresIn: "1h",
+        expiresIn: "5d",
       }
     );
-    res.cookie("token", token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 60 });
-    res.status(200).send({
+    res.cookie("token", token, { httpOnly: true });
+    res.cookie("userInfo", userInfo, { httpOnly: true });
+    res.status(200).json({
       success: true,
       message: "logindan otdi",
       token,
+      userInfo,
     });
   } catch (error) {
     console.log(error);
@@ -109,7 +115,7 @@ const alluser = async (req, res) => {
         message: "foydalanuvchilar yo'q",
       });
     }
-    res.status(200).send({
+    res.status(200).json({
       success: true,
       message: "success",
       foydalanuvchilar_soni: users.length,

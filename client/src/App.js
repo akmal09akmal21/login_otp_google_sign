@@ -10,6 +10,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Contact from "./components/Contact";
 
 function App() {
+  const token = JSON.parse(localStorage.getItem("token"));
   return (
     <div className="App">
       <ToastContainer />
@@ -26,6 +27,7 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="*" element={<Login />} />
       </Routes>
     </div>
   );
