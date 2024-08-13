@@ -1,44 +1,30 @@
+import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { toast } from "react-toastify";
 
-const Login = () => {
+const ForgotPassword = () => {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  axios.defaults.withCredentials = true;
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const { data } = await axios.post(
-        "http://localhost:5000/login",
+    axios
+      .post(
+        "http://localhost:5000/forgotpassword",
         {
           email,
-          password,
         },
         {
           withCredentials: true,
         }
-      );
-
-      if (data.success === true) {
-        toast.success(data.message);
-
-        localStorage.setItem("token", JSON.stringify(data));
-
-        if (typeof window !== "undefined") {
-          setTimeout(() => {
-            navigate("/home");
-          }, 1000);
-        }
-      }
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
-    }
+      )
+      .then((res) => {
+        console.log(res);
+        alert(res.data);
+        navigate("/login");
+      })
+      .catch((err) => {
+        console.log(err.response.message);
+      });
   };
   return (
     <>
@@ -87,7 +73,7 @@ const Login = () => {
             <div className="mt-4 flex items-center justify-between">
               <span className="border-b w-1/5 lg:w-1/4"></span>
               <Link
-                to="/forgotpassword"
+                to="#"
                 className="text-xs text-center text-gray-500 uppercase"
               >
                 email va parolni kiriting
@@ -108,24 +94,7 @@ const Login = () => {
                   }}
                 />
               </div>
-              <div className="mt-4">
-                <div className="flex justify-between">
-                  <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Paro'l
-                  </label>
-                  <Link to="/forgotpassword" className="text-xs text-gray-500">
-                    parol esdan chiqdimi?
-                  </Link>
-                </div>
-                <input
-                  className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
-                  type="password"
-                  name="password"
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
-                />
-              </div>
+
               <div className="mt-8">
                 <button
                   type="submit"
@@ -148,5 +117,4 @@ const Login = () => {
     </>
   );
 };
-
-export default Login;
+export default ForgotPassword;

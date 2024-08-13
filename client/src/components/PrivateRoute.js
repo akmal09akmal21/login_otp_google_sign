@@ -1,10 +1,10 @@
 import React from "react";
-import { Navigate, Route } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const PrivateRoute = ({ children }) => {
-  const userinfo = JSON.parse(localStorage.getItem("token"));
-
-  return userinfo.token ? children : <Navigate to="/" />;
+  const token = localStorage.getItem("token");
+  console.log(token);
+  return token ? children : <Navigate to="/" />;
 };
 
 export default PrivateRoute;

@@ -1,6 +1,7 @@
 const userModel = require("../model/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 const registerController = async (req, res) => {
   const { userName, email, password } = req.body;
@@ -66,20 +67,29 @@ const loginController = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "5d",
     });
-    const userInfo = jwt.sign(
+
+    const refreshToken = jwt.sign(
       { id: user._id },
       process.env.ACCESS_TOKEN_SECRET,
       {
         expiresIn: "5d",
       }
     );
-    res.cookie("token", token, { httpOnly: true });
-    res.cookie("userInfo", userInfo, { httpOnly: true });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
     res.status(200).json({
       success: true,
       message: "logindan otdi",
       token,
-      userInfo,
+      refreshToken,
     });
   } catch (error) {
     console.log(error);
@@ -131,4 +141,71 @@ const alluser = async (req, res) => {
   }
 };
 
-module.exports = { registerController, loginController, alluser, logout };
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "bu registratsiyadan otmagan",
+      });
+    }
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "5m",
+    });
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAILIM,
+        pass: process.env.GOOGLE_PASSWORD,
+      },
+    });
+    const encodedToken = encodeURIComponent(token).replace(/\./g, "%2E");
+    var mailOptions = {
+      from: process.env.EMAILIM,
+      to: email,
+      subject: "Reset Password",
+      text: `http://localhost:3000/resetpassword/${encodedToken}`,
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        return res.send({
+          success: false,
+          message: "email ga yuborilmadi xatolik",
+          error: error,
+        });
+      } else {
+        return res.send({ success: true, message: "emailga yuborildi" });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+  try {
+    const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+    const id = decoded.id;
+    const hashPassword = await bcrypt.hash(password, 10);
+    await userModel.findByIdAndUpdate({ _id: id }, { password: hashPassword });
+    return res.status(200).send({ success: true, message: "parol yangilandi" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = {
+  registerController,
+  loginController,
+  alluser,
+  logout,
+  forgotPassword,
+  resetPassword,
+};
