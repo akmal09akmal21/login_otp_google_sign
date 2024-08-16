@@ -11,25 +11,24 @@ const ResetPassword = () => {
   const { token } = useParams();
   const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      if (password !== confirmPassword) {
-        alert("parolni togri yoz");
-      } else {
-        const { data } = axios.post(
-          "http://localhost:5000/resetpassword/" + token,
-          {
-            password,
-          },
-          {
-            withCredentials: true,
-          }
-        );
-        toast.success(data.message);
-      }
-    } catch (error) {
-      console.log(error.response);
+    if (password !== confirmPassword) {
+      alert("parolni togri yoz");
+    } else {
+      axios
+        .post("http://localhost:5000/resetpassword/" + token, {
+          password,
+        })
+        .then((res) => {
+          toast.success(res.data.message);
+          navigate("/login");
+        })
+        .catch((err) => {
+          toast.error(err.data.message);
+          console.log(err.response.message);
+        });
     }
   };
+
   return (
     <>
       <div className="py-16">
@@ -43,9 +42,9 @@ const ResetPassword = () => {
           ></div>
           <div className="w-full p-8 lg:w-1/2">
             <h2 className="text-2xl font-semibold text-gray-700 text-center">
-              Brand
+              Paro'l Yaratish
             </h2>
-            <p className="text-xl text-gray-600 text-center">Welcome back!</p>
+            <p className="text-xl text-gray-600 text-center">-----------</p>
 
             <div className="mt-4 flex items-center justify-between">
               <span className="border-b w-1/5 lg:w-1/4"></span>

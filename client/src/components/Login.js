@@ -113,8 +113,8 @@ const Login = () => {
                   <label className="block text-gray-700 text-sm font-bold mb-2">
                     Paro'l
                   </label>
-                  <Link to="/forgotpassword" className="text-xs text-gray-500">
-                    parol esdan chiqdimi?
+                  <Link to="/forgotpassword" className="text-xs text-green-600">
+                    Parol esdan chiqdimi?
                   </Link>
                 </div>
                 <input

@@ -162,12 +162,13 @@ const forgotPassword = async (req, res) => {
         pass: process.env.GOOGLE_PASSWORD,
       },
     });
+
     const encodedToken = encodeURIComponent(token).replace(/\./g, "%2E");
     var mailOptions = {
       from: process.env.EMAILIM,
       to: email,
       subject: "Reset Password",
-      text: `http://localhost:3000/resetpassword/${encodedToken}`,
+      html: `<a href=${`http://localhost:3000/resetpassword/${encodedToken}`}  >Reset Password</a> Reset Password`,
     };
 
     // Send the email
@@ -179,7 +180,10 @@ const forgotPassword = async (req, res) => {
           error: error,
         });
       } else {
-        return res.send({ success: true, message: "emailga yuborildi" });
+        return res.send({
+          success: true,
+          message: "Elektron pochtangizga Parol yuborildi",
+        });
       }
     });
   } catch (error) {

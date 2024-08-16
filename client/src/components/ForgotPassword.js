@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -18,12 +19,12 @@ const ForgotPassword = () => {
         }
       )
       .then((res) => {
-        console.log(res);
-        alert(res.data);
+        toast.success(res.data.message);
         navigate("/login");
       })
       .catch((err) => {
         console.log(err.response.message);
+        toast.error(err.data.message);
       });
   };
   return (
@@ -76,7 +77,7 @@ const ForgotPassword = () => {
                 to="#"
                 className="text-xs text-center text-gray-500 uppercase"
               >
-                email va parolni kiriting
+                Paro'lni tiklash uchun Emailni kiriting
               </Link>
               <span className="border-b w-1/5 lg:w-1/4"></span>
             </div>
@@ -100,7 +101,7 @@ const ForgotPassword = () => {
                   type="submit"
                   className="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600"
                 >
-                  Tizimga kirish
+                  So'rov Yuborish
                 </button>
               </div>
             </form>
